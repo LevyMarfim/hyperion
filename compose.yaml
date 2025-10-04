@@ -1,25 +1,60 @@
-
 services:
+  nginx:
+    container_name: hyperion-nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      hyperion_network:
+  
+  php:
+    container_name: hyperion-php
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./:/var/www
+    networks:
+      hyperion_network:
+
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    container_name: hyperion-db
+    image: postgres:18-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_DB: ${POSTGRES_DB}
       # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+    ports:
+      - '5432:5432'
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
       timeout: 5s
       retries: 5
       start_period: 60s
+    restart: always
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
+      - hyperion_data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
+    networks:
+      hyperion_network:
 ###< doctrine/doctrine-bundle ###
 
 volumes:
 ###> doctrine/doctrine-bundle ###
-  database_data:
+  hyperion_data:
 ###< doctrine/doctrine-bundle ###
+
+networks:
+  hyperion_network:
+    driver: bridge
