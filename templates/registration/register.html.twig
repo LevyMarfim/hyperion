@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/registration.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="registration-container" data-controller="registration">
+    <div class="registration-card card">
+        <div class="card-body p-4 p-md-5">
+            {# Logo/Brand Section #}
+            <div class="text-center mb-4">
+                <div class="registration-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="fw-bold text-dark mb-2">Create Account</h2>
+                <p class="text-muted">Join us today</p>
+            </div>
+
+            {# Registration Form #}
+            {{ form_start(registrationForm, {
+                'attr': {
+                    'class': 'registration-form needs-validation',
+                    'novalidate': 'novalidate',
+                    'data-registration-target': 'form'
+                }
+            }) }}
+
+                {# Form Errors #}
+                {% if registrationForm.vars.errors|length > 0 %}
+                    <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div class="small">
+                            {{ form_errors(registrationForm) }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Username Field #}
+                <div class="form-floating mb-3">
+                    {{ form_widget(registrationForm.username, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Username',
+                            'autocomplete': 'username',
+                            'required': 'required',
+                            'data-registration-target': 'username'
+                        }
+                    }) }}
+                    <label for="{{ registrationForm.username.vars.id }}">
+                        <i class="fas fa-user me-2"></i>Username
+                    </label>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                </div>
+
+                {# Password Field with Strength Indicator #}
+                <div class="mb-3">
+                    <div class="form-floating">
+                        {{ form_widget(registrationForm.plainPassword, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Password',
+                                'autocomplete': 'new-password',
+                                'required': 'required',
+                                'data-registration-target': 'password'
+                            }
+                        }) }}
+                        <label for="{{ registrationForm.plainPassword.vars.id }}">
+                            <i class="fas fa-key me-2"></i>Password
+                        </label>
+                    </div>
+                    {# Password Strength Indicator #}
+                    <div class="password-strength weak" data-registration-target="passwordStrength"></div>
+                    <div class="password-feedback text-danger" data-registration-target="passwordFeedback">
+                        Password strength indicator
+                    </div>
+                    <div class="invalid-feedback">
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                </div>
+
+                {# Terms and Conditions #}
+                <div class="mb-4">
+                    <div class="form-check">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            'attr': {
+                                'class': 'form-check-input',
+                                'required': 'required'
+                            }
+                        }) }}
+                        <label class="form-check-label text-muted small" for="{{ registrationForm.agreeTerms.vars.id }}">
+                            I agree to the <a href="#" class="login-link">Terms and Conditions</a>
+                        </label>
+                        <div class="invalid-feedback">
+                            You must agree to the terms and conditions.
+                        </div>
+                    </div>
+                </div>
+
+                {# Submit Button #}
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-register fw-bold py-3">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+                </div>
+
+                {# Demo Button (development only) #}
+                {% if app.environment == 'dev' %}
+                <div class="d-grid mb-4">
+                    <button type="button" 
+                            class="btn btn-outline-secondary btn-sm" 
+                            data-action="click->registration#fillDemoData">
+                        <i class="fas fa-magic me-1"></i>Fill Demo Data
+                    </button>
+                </div>
+                {% endif %}
+
+            {{ form_end(registrationForm) }}
+
+            {# Login Link #}
+            <div class="text-center mt-4">
+                <p class="text-muted mb-0">
+                    Already have an account? 
+                    <a href="{{ path('app_login') }}" class="login-link fw-bold">Sign in</a>
+                </p>
+            </div>
+
+            {# Footer #}
+            <div class="text-center mt-4 pt-3 border-top">
+                <p class="text-muted small mb-0">
+                    &copy; {{ "now"|date("Y") }} Your Company. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
