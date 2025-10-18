@@ -30,9 +30,16 @@ class Bank
     #[ORM\OneToMany(targetEntity: BankAccount::class, mappedBy: 'bank')]
     private Collection $bank;
 
+    /**
+     * @var Collection<int, BankAccount>
+     */
+    #[ORM\OneToMany(targetEntity: BankAccount::class, mappedBy: 'bank')]
+    private Collection $bankAccounts;
+
     public function __construct()
     {
         $this->bank = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +107,36 @@ class Bank
             // set the owning side to null (unless already changed)
             if ($bank->getBank() === $this) {
                 $bank->setBank(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BankAccount>
+     */
+    public function getBankAccounts(): Collection
+    {
+        return $this->bankAccounts;
+    }
+
+    public function addBankAccount(BankAccount $bankAccount): static
+    {
+        if (!$this->bankAccounts->contains($bankAccount)) {
+            $this->bankAccounts->add($bankAccount);
+            $bankAccount->setBank($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBankAccount(BankAccount $bankAccount): static
+    {
+        if ($this->bankAccounts->removeElement($bankAccount)) {
+            // set the owning side to null (unless already changed)
+            if ($bankAccount->getBank() === $this) {
+                $bankAccount->setBank(null);
             }
         }
 

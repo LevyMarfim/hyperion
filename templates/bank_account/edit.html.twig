@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Bank Account - Hyperion{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/bank_account.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Edit Bank Account</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{{ path('app_bank_account_index') }}" class="btn btn-outline-secondary mb-4">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.bank) }}
+                                {{ form_widget(form.bank) }}
+                                <div class="invalid-feedback">
+                                    Please select a bank.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.type) }}
+                                {{ form_widget(form.type) }}
+                                <div class="invalid-feedback">
+                                    Please select an account type.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.accountNumber) }}
+                                {{ form_widget(form.accountNumber) }}
+                                <div class="invalid-feedback">
+                                    Please provide an account number.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.agency) }}
+                                {{ form_widget(form.agency) }}
+                                <div class="invalid-feedback">
+                                    Please provide an agency number.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.balance) }}
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    {{ form_widget(form.balance) }}
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid balance.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.accountHolder) }}
+                                {{ form_widget(form.accountHolder) }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Account
+                            </button>
+                            <a href="{{ path('app_bank_account_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Form validation
+        (function() {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}

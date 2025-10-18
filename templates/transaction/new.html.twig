@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add New Transaction - Hyperion{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/transaction.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Add New Transaction</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{{ path('app_transaction_index') }}" class="btn btn-outline-secondary mb-4">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.bankAccount) }}
+                                {{ form_widget(form.bankAccount) }}
+                                <div class="invalid-feedback">
+                                    Please select a bank account.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.type) }}
+                                {{ form_widget(form.type) }}
+                                <div class="invalid-feedback">
+                                    Please select a transaction type.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.amount) }}
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    {{ form_widget(form.amount) }}
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid amount.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.category) }}
+                                {{ form_widget(form.category) }}
+                                <div class="invalid-feedback">
+                                    Please select a category.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form_label(form.description) }}
+                                {{ form_widget(form.description) }}
+                                <div class="invalid-feedback">
+                                    Please provide a description.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.transactionDate) }}
+                                {{ form_widget(form.transactionDate) }}
+                                <div class="invalid-feedback">
+                                    Please provide a transaction date.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.recipient) }}
+                                {{ form_widget(form.recipient) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.sender) }}
+                                {{ form_widget(form.sender) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form_label(form.notes) }}
+                                {{ form_widget(form.notes) }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Create Transaction
+                            </button>
+                            <a href="{{ path('app_transaction_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Form validation
+        (function() {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}
