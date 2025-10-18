@@ -1,0 +1,116 @@
+{% extends 'bank/base.html.twig' %}
+
+{% block title %}{{ bank.name }} - Hyperion{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Bank Details: {{ bank.name }}</h2>
+                    <div class="btn-group">
+                        <a href="{{ path('app_bank_edit', {'id': bank.id}) }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{{ path('app_bank_index') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-list me-1"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="bg-light">ID</th>
+                                    <td>{{ bank.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Bank Name</th>
+                                    <td>{{ bank.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">CNPJ</th>
+                                    <td class="cnpj">{{ bank.cnpj }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="bg-light">Corporate Name</th>
+                                    <td>{{ bank.nomeEmpresarial }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Total Accounts</th>
+                                    <td>
+                                        <span class="badge bg-primary">{{ bank.bank|length }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Created</th>
+                                    <td>
+                                        <small class="text-muted">System record</small>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% if bank.bank|length > 0 %}
+                        <div class="mt-4">
+                            <h5 class="mb-3">Associated Bank Accounts</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Account Number</th>
+                                            <th>Agency</th>
+                                            <th>Type</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for account in bank.bank %}
+                                            <tr>
+                                                <td>{{ account.accountNumber }}</td>
+                                                <td>{{ account.agency }}</td>
+                                                <td>
+                                                    <span class="badge bg-info">{{ account.type }}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="fw-bold">R$ {{ account.balance|number_format(2, ',', '.') }}</span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-credit-card fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No bank accounts associated with this bank.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Format CNPJ display
+        const cnpjElement = document.querySelector('.cnpj');
+        if (cnpjElement) {
+            const cnpj = cnpjElement.textContent.trim();
+            if (cnpj.length === 14) {
+                cnpjElement.textContent = cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            }
+        }
+    </script>
+{% endblock %}

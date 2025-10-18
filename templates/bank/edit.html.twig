@@ -1,0 +1,95 @@
+{% extends 'bank/base.html.twig' %}
+
+{% block title %}Edit {{ bank.name }} - Hyperion{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Edit Bank: {{ bank.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{{ path('app_bank_index') }}" class="btn btn-outline-secondary mb-4">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form_label(form.name) }}
+                                {{ form_widget(form.name) }}
+                                <div class="invalid-feedback">
+                                    Please provide a bank name.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.cnpj) }}
+                                {{ form_widget(form.cnpj) }}
+                                <div class="invalid-feedback">
+                                    Please provide a valid CNPJ.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.nomeEmpresarial) }}
+                                {{ form_widget(form.nomeEmpresarial) }}
+                                <div class="invalid-feedback">
+                                    Please provide a corporate name.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Bank
+                            </button>
+                            <a href="{{ path('app_bank_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // CNPJ mask
+        const cnpjInput = document.querySelector('.cnpj-mask');
+        if (cnpjInput) {
+            cnpjInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 14) {
+                    value = value.replace(/^(\d{2})(\d)/, '$1.$2')
+                                 .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+                                 .replace(/\.(\d{3})(\d)/, '.$1/$2')
+                                 .replace(/(\d{4})(\d)/, '$1-$2');
+                    e.target.value = value;
+                }
+            });
+        }
+
+        // Form validation
+        (function() {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}
